@@ -43,7 +43,7 @@ export interface HeaderProps extends TitleProps {
   /** Adds a border to the bottom of the page header (stand-alone app use only) */
   separator?: boolean;
   /** Primary page-level action */
-  primaryAction?: PrimaryAction;
+  primaryAction?: PrimaryAction | React.ReactNode;
   /** Page-level pagination (stand-alone app use only) */
   pagination?: PaginationDescriptor;
   /** Collection of breadcrumbs */
@@ -54,6 +54,12 @@ export interface HeaderProps extends TitleProps {
   actionGroups?: MenuGroupDescriptor[];
   /** Additional navigation markup */
   additionalNavigation?: React.ReactNode;
+}
+
+function isPrimaryAction(
+  x: PrimaryAction | React.ReactNode,
+): x is PrimaryAction {
+  return !React.isValidElement(x) && x !== undefined;
 }
 
 export function Header({
@@ -116,18 +122,17 @@ export function Header({
     />
   );
 
-  const primary =
-    primaryAction &&
-    (primaryAction.primary === undefined ? true : primaryAction.primary);
+  const primaryActionMarkup = (() => {
+    if (!primaryAction) {
+      return null;
+    }
 
-  const primaryActionMarkup = primaryAction ? (
-    <ConditionalWrapper
-      condition={newDesignLanguage === false}
-      wrapper={(children) => (
-        <div className={styles.PrimaryActionWrapper}>{children}</div>
-      )}
-    >
-      {buttonsFrom(
+    let content = null;
+    if (isPrimaryAction(primaryAction)) {
+      const primary =
+        primaryAction.primary === undefined ? true : primaryAction.primary;
+
+      content = buttonsFrom(
         shouldShowIconOnly(
           newDesignLanguage,
           isNavigationCollapsed,
@@ -136,9 +141,22 @@ export function Header({
         {
           primary,
         },
-      )}
-    </ConditionalWrapper>
-  ) : null;
+      );
+    } else {
+      content = primaryAction;
+    }
+
+    return (
+      <ConditionalWrapper
+        condition={newDesignLanguage === false}
+        wrapper={(children) => (
+          <div className={styles.PrimaryActionWrapper}>{children}</div>
+        )}
+      >
+        {content}
+      </ConditionalWrapper>
+    );
+  })();
 
   const actionMenuMarkup =
     secondaryActions.length > 0 || hasGroupsWithActions(actionGroups) ? (
