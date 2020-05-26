@@ -252,7 +252,7 @@ Use for building any page on iOS.
 
 <!-- example-for: web -->
 
-Use as an alternative to create a custom primary action.
+Use to create a custom primary action.
 
 ```jsx
 <Page

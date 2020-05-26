@@ -122,39 +122,12 @@ export function Header({
     />
   );
 
-  function getPrimaryActionMarkup() {
-    let content = null;
-    if (isPrimaryAction(primaryAction)) {
-      const primary =
-        primaryAction.primary === undefined ? true : primaryAction.primary;
-
-      content = buttonsFrom(
-        shouldShowIconOnly(
-          newDesignLanguage,
-          isNavigationCollapsed,
-          primaryAction,
-        ),
-        {
-          primary,
-        },
-      );
-    } else {
-      content = primaryAction;
-    }
-
-    return (
-      <ConditionalWrapper
-        condition={newDesignLanguage === false}
-        wrapper={(children) => (
-          <div className={styles.PrimaryActionWrapper}>{children}</div>
-        )}
-      >
-        {content}
-      </ConditionalWrapper>
-    );
-  }
-
-  const primaryActionMarkup = primaryAction ? getPrimaryActionMarkup() : null;
+  const primaryActionMarkup = primaryAction
+    ? getPrimaryActionMarkup(primaryAction, {
+        newDesignLanguage,
+        isNavigationCollapsed,
+      })
+    : null;
 
   const actionMenuMarkup =
     secondaryActions.length > 0 || hasGroupsWithActions(actionGroups) ? (
@@ -359,4 +332,40 @@ function determineLayout({
     layouts.desktopDefault;
 
   return layout.slots;
+}
+
+function getPrimaryActionMarkup(
+  primaryAction: PrimaryAction | React.ReactNode,
+  {
+    newDesignLanguage,
+    isNavigationCollapsed,
+  }: {newDesignLanguage: boolean; isNavigationCollapsed: boolean},
+) {
+  let content = primaryAction;
+  if (isPrimaryAction(primaryAction)) {
+    const primary =
+      primaryAction.primary === undefined ? true : primaryAction.primary;
+
+    content = buttonsFrom(
+      shouldShowIconOnly(
+        newDesignLanguage,
+        isNavigationCollapsed,
+        primaryAction,
+      ),
+      {
+        primary,
+      },
+    );
+  }
+
+  return (
+    <ConditionalWrapper
+      condition={newDesignLanguage === false}
+      wrapper={(children) => (
+        <div className={styles.PrimaryActionWrapper}>{children}</div>
+      )}
+    >
+      {content}
+    </ConditionalWrapper>
+  );
 }
