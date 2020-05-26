@@ -248,11 +248,11 @@ Use for building any page on iOS.
 
 <!-- /content-for -->
 
-### Page with custom primary actions
+### Page with custom primary action
 
 <!-- example-for: web -->
 
-Use as an alternative to to create custom, more complex primary actions.
+Use as an alternative to create a custom primary action.
 
 ```jsx
 <Page

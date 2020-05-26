@@ -56,7 +56,7 @@ export interface HeaderProps extends TitleProps {
   additionalNavigation?: React.ReactNode;
 }
 
-function isPrimaryAction(
+export function isPrimaryAction(
   x: PrimaryAction | React.ReactNode,
 ): x is PrimaryAction {
   return !React.isValidElement(x) && x !== undefined;
@@ -122,11 +122,7 @@ export function Header({
     />
   );
 
-  const primaryActionMarkup = (() => {
-    if (!primaryAction) {
-      return null;
-    }
-
+  function getPrimaryActionMarkup() {
     let content = null;
     if (isPrimaryAction(primaryAction)) {
       const primary =
@@ -156,7 +152,9 @@ export function Header({
         {content}
       </ConditionalWrapper>
     );
-  })();
+  }
+
+  const primaryActionMarkup = primaryAction && getPrimaryActionMarkup();
 
   const actionMenuMarkup =
     secondaryActions.length > 0 || hasGroupsWithActions(actionGroups) ? (
