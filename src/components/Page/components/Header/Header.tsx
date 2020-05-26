@@ -154,7 +154,7 @@ export function Header({
     );
   }
 
-  const primaryActionMarkup = primaryAction && getPrimaryActionMarkup();
+  const primaryActionMarkup = primaryAction ? getPrimaryActionMarkup() : null;
 
   const actionMenuMarkup =
     secondaryActions.length > 0 || hasGroupsWithActions(actionGroups) ? (
